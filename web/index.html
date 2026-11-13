@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Study Tracker</title>
+  <meta name="theme-color" content="#ffffff">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='none' stroke='black' stroke-width='3'/%3E%3Cpath d='M16 8v8l5 3' stroke='black' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+</head>
+<body>
+  <div class="progress-strip"><div id="strip-fill"></div></div>
+
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="#timer" data-nav="timer">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="13"/><path d="M16 8v8l5 3"/></svg>
+        <span>Study Tracker</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="#timer" data-nav="timer">Timer</a>
+        <a href="#tracker" data-nav="tracker">Tracker</a>
+        <a href="#review" data-nav="review">Review</a>
+        <a href="#progress" data-nav="progress">Progress</a>
+      </nav>
+      <div class="topbar-actions">
+        <button class="icon-btn" id="btn-report" title="Report" aria-label="Report">
+          <svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+        </button>
+        <button class="icon-btn" id="btn-settings" title="Settings" aria-label="Settings">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- ======================= TIMER ======================= -->
+    <section id="view-timer" class="view" data-view="timer">
+      <div class="timer-card">
+        <div class="modes" role="tablist">
+          <button role="tab" data-mode="pomodoro">Pomodoro</button>
+          <button role="tab" data-mode="short">Short Break</button>
+          <button role="tab" data-mode="long">Long Break</button>
+        </div>
+        <div class="clock" id="clock" aria-live="off">30:00</div>
+        <div class="controls">
+          <button class="start-btn" id="btn-start">START</button>
+          <button class="icon-btn skip" id="btn-skip" title="Skip" aria-label="Skip" hidden>
+            <svg viewBox="0 0 24 24"><path d="M5 4l10 8-10 8V4zM19 5v14"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="round">
+        <div id="round-no">#1</div>
+        <div id="round-msg">Time to focus!</div>
+      </div>
+
+      <div class="goal">
+        <div class="goal-head">
+          <span>Today</span>
+          <span id="goal-text">0h 00m</span>
+        </div>
+        <div class="goal-bar" aria-hidden="true">
+          <div class="goal-fill" id="goal-fill"></div>
+          <div class="goal-mark" id="goal-mark-min"><span>5h</span></div>
+          <div class="goal-mark end"><span>6h</span></div>
+        </div>
+        <div class="goal-subjects" id="goal-subjects"></div>
+      </div>
+
+      <div class="working-on" id="working-on"></div>
+
+      <div class="tasks-head">
+        <h2>Tasks</h2>
+        <div class="tasks-tools">
+          <input type="date" id="plan-date" aria-label="Plan date">
+          <button class="icon-btn" id="btn-task-menu" aria-label="Task options" aria-haspopup="true">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+          </button>
+          <div class="menu" id="task-menu" hidden>
+            <button data-menu="load">Load plan for this date</button>
+            <button data-menu="clear-done">Clear finished tasks</button>
+            <button data-menu="clear-all">Clear all tasks</button>
+          </div>
+        </div>
+      </div>
+      <div class="plan-note" id="plan-note"></div>
+      <ul class="tasks" id="tasks"></ul>
+      <button class="add-task" id="btn-add-task">+ Add Task</button>
+      <form class="task-form" id="task-form" hidden></form>
+      <div class="tasks-foot" id="tasks-foot"></div>
+    </section>
+
+    <!-- ======================= TRACKER ======================= -->
+    <section id="view-tracker" class="view" data-view="tracker" hidden>
+      <div class="page-head">
+        <h1>Tracker</h1>
+        <a class="btn" id="open-sheet" target="_blank" rel="noopener">Open in Google Sheets ↗</a>
+      </div>
+      <div id="tracker-body"></div>
+    </section>
+
+    <!-- ======================= REVIEW ======================= -->
+    <section id="view-review" class="view" data-view="review" hidden>
+      <div class="page-head">
+        <h1>Tonight's Review</h1>
+        <div class="row-gap">
+          <input type="date" id="review-date" aria-label="Review date">
+          <button class="btn" id="review-refresh">Refresh</button>
+        </div>
+      </div>
+      <div id="review-body"></div>
+    </section>
+
+    <!-- ======================= PROGRESS ======================= -->
+    <section id="view-progress" class="view" data-view="progress" hidden>
+      <div class="page-head">
+        <h1>Progress</h1>
+        <button class="btn" id="progress-refresh">Refresh</button>
+      </div>
+      <p class="source-note" id="progress-source"></p>
+      <div class="tiles" id="tiles"></div>
+      <h2 class="sec">16 Nov – 16 Dec</h2>
+      <div id="heatmap"></div>
+      <h2 class="sec">Hours by subject</h2>
+      <div id="subject-bars"></div>
+      <h2 class="sec">Topic coverage</h2>
+      <div id="coverage"></div>
+    </section>
+  </main>
+
+  <!-- ======================= MODALS ======================= -->
+  <dialog id="dlg-settings" class="dialog">
+    <form method="dialog" class="dialog-inner" id="settings-form">
+      <div class="dialog-head"><h2>Settings</h2><button class="icon-btn" value="cancel" formnovalidate aria-label="Close">✕</button></div>
+
+      <h3>Timer (minutes)</h3>
+      <div class="grid3">
+        <label>Pomodoro<input type="number" min="1" max="180" name="pomodoro"></label>
+        <label>Short Break<input type="number" min="1" max="60" name="short"></label>
+        <label>Long Break<input type="number" min="1" max="90" name="long"></label>
+      </div>
+      <label class="switch-row">Auto start breaks<input type="checkbox" name="autoBreaks"></label>
+      <label class="switch-row">Auto start pomodoros<input type="checkbox" name="autoPomos"></label>
+      <label class="inline-row">Long break interval<input type="number" min="1" max="12" name="longInterval"></label>
+
+      <h3>Sound</h3>
+      <label class="inline-row">Alarm
+        <select name="alarm"><option value="bell">Bell</option><option value="digital">Digital</option><option value="soft">Soft</option><option value="none">None</option></select>
+      </label>
+      <label class="inline-row">Volume<input type="range" min="0" max="100" name="volume"></label>
+      <label class="switch-row">Ticking sound during focus<input type="checkbox" name="tick"></label>
+      <label class="switch-row">Desktop notifications<input type="checkbox" name="notify"></label>
+
+      <h3>Theme</h3>
+      <label class="inline-row">Appearance
+        <select name="theme"><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option></select>
+      </label>
+
+      <h3>Daily target (hours)</h3>
+      <div class="grid3">
+        <label>Minimum<input type="number" min="1" max="12" step="0.5" name="minHours"></label>
+        <label>Full day<input type="number" min="1" max="14" step="0.5" name="fullHours"></label>
+      </div>
+
+      <h3>Google Sheet</h3>
+      <label>Sheet link<input type="url" name="sheetUrl" placeholder="https://docs.google.com/spreadsheets/d/…/edit"></label>
+      <label>Connector URL (Apps Script web app)<input type="url" name="scriptUrl" placeholder="https://script.google.com/macros/s/…/exec"></label>
+      <label>Key<input type="password" name="key" autocomplete="off" placeholder="Student key or Varsha's key"></label>
+      <div class="row-gap"><button type="button" class="btn" id="btn-test-conn">Test connection</button><span id="conn-status" class="muted"></span></div>
+
+      <div class="dialog-foot"><button class="btn primary" value="save" id="btn-save-settings">Save</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="dlg-report" class="dialog">
+    <div class="dialog-inner">
+      <div class="dialog-head"><h2>Report</h2><button class="icon-btn" data-close aria-label="Close">✕</button></div>
+      <div id="report-body"></div>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+
+  <script src="plan.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
